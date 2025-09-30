@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/toy_user
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 4        # 최소 유휴 커넥션 수
+      maximum-pool-size: 4   # 최대 커넥션 수
+      idle-timeout: 10000    # 유휴 커넥션 유지 시간 (ms)
+      max-lifetime: 30000    # 커넥션 최대 생존 시간 (ms)
+      connection-timeout: 180000 # 커넥션 가져오기 최대 대기 시간 (ms)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # 개발 환경용
+    generate-ddl: true
+    show-sql: true
+    open-in-view: false
+jwt:
+  web-access-token-validity-in-seconds: 900
+  web-refresh-token-validity-in-seconds: 604800
+  mobile-access-token-validity-in-seconds: 900
+  mobile-refresh-token-validity-in-seconds: 604800
+  secret-key: {JWT_SECRET}
+#    properties:
+#      hibernate.default_schema: toy_user

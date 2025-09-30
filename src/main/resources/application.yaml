@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: toy-user
+logging:
+  level:
+    root: INFO
