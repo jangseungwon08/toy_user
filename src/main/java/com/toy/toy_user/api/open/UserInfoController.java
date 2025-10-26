@@ -16,25 +16,25 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/user/info", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/users/info", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserInfoController {
     private final UserInfoService userInfoService;
 
     @GetMapping(value = "/me")
-    public ApiResponseDto<UserInfoDto> userInfo(){
+    public ApiResponseDto<UserInfoDto> userInfo() {
         String userId = GatewayRequestHeaderUtils.getUserIdOrThrowException();
         return ApiResponseDto.createOk(userInfoService.userInfo(userId));
     }
 
-    @PostMapping(value = "/edit")
-    public ApiResponseDto<String> editUser(@RequestBody @Valid UserEditDto userEditDto){
+    @PatchMapping(value = "/me")
+    public ApiResponseDto<String> editUser(@RequestBody @Valid UserEditDto userEditDto) {
         String userId = GatewayRequestHeaderUtils.getUserIdOrThrowException();
         userInfoService.editUser(userId, userEditDto);
         return ApiResponseDto.createOk("수정이 완료되었습니다.");
     }
 
-    @PostMapping(value = "/editPassword")
-    public ApiResponseDto<String> editPassword(@RequestBody @Valid UserPasswordDto userPasswordDto){
+    @PatchMapping(value = "/me/password")
+    public ApiResponseDto<String> editPassword(@RequestBody @Valid UserPasswordDto userPasswordDto) {
         String userId = GatewayRequestHeaderUtils.getUserIdOrThrowException();
         userInfoService.editPassword(userId, userPasswordDto);
         return ApiResponseDto.createOk("비밀번호 수정이 완료되었습니다.");

@@ -19,39 +19,49 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/user/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/users/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserAuthController {
     private final UserAuthService userAuthService;
 
-    @PostMapping(value = "/signup")
-    public ApiResponseDto<String> register(@RequestBody @Valid UserRegisterDto userRegisterDto){
+    @PostMapping(value = "/register")
+    public ApiResponseDto<String> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
         userAuthService.registerUser(userRegisterDto);
         return ApiResponseDto.createOk("회원가입 성공");
     }
 
-    @PostMapping(value = "/login")
-    public ApiResponseDto<TokenDto.AccessRefreshToken> login(@RequestBody @Valid UserLoginDto userLoginDto){
-        TokenDto.AccessRefreshToken accessToken = userAuthService.login(userLoginDto);
+    @GetMapping(value = "/register/validateId")
+    public ApiResponseDto<Boolean> validateId(@RequestParam String userId){
+        return ApiResponseDto.createOk(userAuthService.validateId(userId));
+    }
+
+    @GetMapping(value = "/register/validateNickName")
+    public ApiResponseDto<Boolean> validateNickName(@RequestParam String nickName){
+        return ApiResponseDto.createOk((userAuthService.validateNickName(nickName)));
+    }
+
+    @PostMapping(value = "/tokens")
+    public ApiResponseDto<TokenDto.AccessRefreshToken> tokens(@RequestBody @Valid UserLoginDto userLoginDto) {
+        TokenDto.AccessRefreshToken accessToken = userAuthService.tokens(userLoginDto);
         return ApiResponseDto.createOk(accessToken);
     }
 
-    @PostMapping(value = "/refresh")
-    public ApiResponseDto<TokenDto.AccessRefreshToken> refresh(@RequestBody @Valid UserRefreshDto userRefreshDto){
-        TokenDto.AccessRefreshToken refreshToken = userAuthService.refresh(userRefreshDto);
+    @PostMapping(value = "/tokens/renew")
+    public ApiResponseDto<TokenDto.AccessRefreshToken> renewTokens(@RequestBody @Valid UserRefreshDto userRefreshDto) {
+
+        TokenDto.AccessRefreshToken refreshToken = userAuthService.renewTokens(userRefreshDto);
         return ApiResponseDto.createOk(refreshToken);
     }
 
-    @PostMapping(value = "/logout")
-    public ApiResponseDto<String> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    @PostMapping(value = "/tokens/removal")
+    public ApiResponseDto<String> removalTokens(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String accessToken;
 //        Bearer 토큰이 있단는 검증 로직
-        if(StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")){
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             accessToken = authorizationHeader.substring(7);
-        }
-        else{
+        } else {
             throw new BadParameter("인증 토큰이 올바르지 않습니다.");
         }
-        userAuthService.logout(accessToken);
+        userAuthService.removalTokens(accessToken);
         return ApiResponseDto.createOk("로그아웃 성공");
     }
 }

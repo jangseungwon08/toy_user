@@ -15,13 +15,13 @@ spring:
       connection-timeout: 180000 # 커넥션 가져오기 최대 대기 시간 (ms)
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update # 개발 환경용
+      ddl-auto: create #update # 개발 환경용
     generate-ddl: true
     show-sql: true
     open-in-view: false
@@ -30,6 +30,6 @@ jwt:
   web-refresh-token-validity-in-seconds: 604800
   mobile-access-token-validity-in-seconds: 900
   mobile-refresh-token-validity-in-seconds: 604800
-  secret-key: {JWT_SECRET}
+  secret-key: ${JWT_SECRET}
 #    properties:
 #      hibernate.default_schema: toy_user

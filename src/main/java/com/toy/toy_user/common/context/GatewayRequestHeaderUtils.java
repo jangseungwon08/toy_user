@@ -15,6 +15,7 @@ public class GatewayRequestHeaderUtils {
     public static String getUserId() {
         return getRequestHeaderParamAsString("X-Auth-UserId");
     }
+
     public static String getUserName() {
         return getRequestHeaderParamAsString("X-Auth-UserName");
     }
@@ -22,6 +23,7 @@ public class GatewayRequestHeaderUtils {
     public static String getUserNickName() {
         return getRequestHeaderParamAsString("X-Auth-UserNickName");
     }
+
     public static String getUserRole() {
         return getRequestHeaderParamAsString("X-Auth-Role");
     }
@@ -41,12 +43,21 @@ public class GatewayRequestHeaderUtils {
         }
         return username;
     }
+
     public static String getUserIdOrThrowException() {
         String userId = getUserId();
         if (userId == null) {
             throw new NotFound("헤더에 userId 정보가 없습니다.");
         }
         return userId;
+    }
+
+    public static String getUserNickNameOrThrowException(){
+        String nickName = getUserNickName();
+        if (nickName == null){
+            throw new NotFound("헤더에 nickName 정보가 없습니다.");
+        }
+        return nickName;
     }
 
     public static String getClientDeviceOrThrowException() {

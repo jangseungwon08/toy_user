@@ -30,16 +30,13 @@ public class UserAuthService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public void registerUser(UserRegisterDto userRegisterDto){
+    public void registerUser(UserRegisterDto userRegisterDto) {
 //        unique 제약조건 확인
-        if(userRepository.existsByUserId(userRegisterDto.getUserId())){
+        if (userRepository.existsByUserId(userRegisterDto.getUserId())) {
             throw new AlreadyExists("이미 존재하는 아이디입니다.");
         }
-        if(userRepository.existsByNickName(userRegisterDto.getNickName())){
+        if (userRepository.existsByNickName(userRegisterDto.getNickName())) {
             throw new AlreadyExists("이미 존재하는 닉네임입니다.");
-        }
-        if(userRepository.existsByPhoneNumber(userRegisterDto.getPhoneNumber())){
-            throw new AlreadyExists("이미 존재하는 휴대폰 번호입니다.");
         }
 //        user엔티티 객체 생성
         Users users = userRegisterDto.toEntity(passwordEncoder);
@@ -50,22 +47,31 @@ public class UserAuthService {
             throw new AlreadyExists("이미 등록된 사용자 정보가 있습니다.");
         }
     }
+    @Transactional(readOnly = true)
+    public boolean validateId(String userId){
+        return !userRepository.existsByUserId(userId);
+    }
 
     @Transactional(readOnly = true)
-    public TokenDto.AccessRefreshToken login(UserLoginDto userLoginDto){
+    public boolean validateNickName(String nickName){
+        return !userRepository.existsByNickName(nickName);
+    }
+
+    @Transactional(readOnly = true)
+    public TokenDto.AccessRefreshToken tokens(UserLoginDto userLoginDto) {
         Users users = userRepository.findByUserId(userLoginDto.getUserId()).
                 orElseThrow(() -> new BadParameter("아이디 또는 비밀번호를 확인하세요"));
 //        이미 인코딩 된 String값을 비교할 때는 matches를 사용해야됨
-        if(!passwordEncoder.matches(userLoginDto.getPassword(), users.getPassword())){
+        if (!passwordEncoder.matches(userLoginDto.getPassword(), users.getPassword())) {
             throw new BadParameter("아이디 또는 비밀버호를 확인하세요");
         }
         return tokenGenerator.generateAccessRefreshToken(users, "web");
     }
 
     @Transactional(readOnly = true)
-    public TokenDto.AccessRefreshToken refresh(UserRefreshDto userRefreshDto){
+    public TokenDto.AccessRefreshToken renewTokens(UserRefreshDto userRefreshDto) {
         String userId = tokenGenerator.validateJwtToken(userRefreshDto.getRefreshToken());
-        if(userId == null){
+        if (userId == null) {
             throw new BadParameter("토큰이 유효하지 않습니다");
         }
         Users user = userRepository.findByUserId(userId)
@@ -74,8 +80,7 @@ public class UserAuthService {
     }
 
     @Transactional
-    public void logout(String accessToken) {
-
+    public void removalTokens(String accessToken) {
         Long expiresMillis = tokenGenerator.getRemainingExpirationMillis(accessToken);
         if (expiresMillis > 0) {
             redisTemplate.opsForValue().set(

@@ -19,7 +19,7 @@ public class UserEditDto {
     private String name;
 
     @NotBlank(message = "닉네임을 입력하세요")
-    @Size(max=  10, message = "닉네임은 10글자까지만 작성해주세요")
+    @Size(max = 10, message = "닉네임은 10글자까지만 작성해주세요")
     private String nickName;
 
     @NotBlank(message = "전화번호를 입력하세요")

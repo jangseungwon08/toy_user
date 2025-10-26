@@ -13,7 +13,7 @@ public class UserInfoDto {
     private String nickName;
     private String phoneNumber;
 
-    public static UserInfoDto fromEntity(Users users){
+    public static UserInfoDto fromEntity(Users users) {
         return UserInfoDto.builder()
                 .userId(users.getUserId())
                 .email(users.getEmail())

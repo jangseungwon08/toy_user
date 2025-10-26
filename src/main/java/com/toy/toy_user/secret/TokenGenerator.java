@@ -77,6 +77,7 @@ public class TokenGenerator {
         }
         return userId;
     }
+
     private Claims verifyAndGetClaims(String token) {
         Claims claims = null;
         try {

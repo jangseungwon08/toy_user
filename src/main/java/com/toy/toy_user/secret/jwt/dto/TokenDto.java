@@ -12,6 +12,7 @@ public class TokenDto {
         private String token;
         private Integer expiresIn;
     }
+
     @Getter
     @RequiredArgsConstructor
     public static class AccessToken {
