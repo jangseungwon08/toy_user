@@ -9,4 +9,6 @@ import lombok.Setter;
 public class UserRefreshDto {
     @NotBlank(message = "refreshToken을 입력하세요")
     private String refreshToken;
+
+    private String deviceType;
 }

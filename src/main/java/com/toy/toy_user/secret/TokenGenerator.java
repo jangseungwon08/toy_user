@@ -111,7 +111,6 @@ public class TokenGenerator {
         if (refreshToken) {
             if (deviceType != null) {
                 if (deviceType.equals("WEB")) {
-//                    refresh이고 device가 web이면 mobileAccess토큰
                     expiresIn = configProperties.getWebRefreshTokenValidityInSeconds();
                 } else if (deviceType.equals("MOBILE")) {
                     expiresIn = configProperties.getMobileRefreshTokenValidityInSeconds();

@@ -13,4 +13,6 @@ public class UserLoginDto {
 
     @NotBlank(message = "패스워드는 필수 입력값입니다.")
     private String password;
+
+    private String deviceType;
 }

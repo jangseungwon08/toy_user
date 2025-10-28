@@ -35,7 +35,7 @@ public class UserInfoService {
 //        userId 존재하는지 체크
         Users users = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFound("사용자를 찾을 수 없습니다."));
-        if(!users.isActivated()){
+        if(!users.getIsActivated()){
             throw new NotFound("이미 탈퇴한 사용자입니다.");
         }
 //        DTO에서 넘어온 email이 null이 아니고 기존 이메일과 다를때
@@ -74,7 +74,7 @@ public class UserInfoService {
     public void editPassword(String userId, UserPasswordDto userPasswordDto){
         Users users = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFound("존재하지 않는 사용자입니다."));
-        if(!users.isActivated()){
+        if(!users.getIsActivated()){
             throw new NotFound("이미 탈퇴한 사용자입니다.");
         }
 //        원래 비밀번호를 누르고 바뀐 비밀번호

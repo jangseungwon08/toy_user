@@ -32,10 +32,10 @@ public class UserAuthService {
     @Transactional
     public void registerUser(UserRegisterDto userRegisterDto) {
 //        unique 제약조건 확인
-        if (userRepository.existsByUserId(userRegisterDto.getUserId())) {
+        if (!validateId(userRegisterDto.getUserId())) {
             throw new AlreadyExists("이미 존재하는 아이디입니다.");
         }
-        if (userRepository.existsByNickName(userRegisterDto.getNickName())) {
+        if (!validateNickName(userRegisterDto.getNickName())) {
             throw new AlreadyExists("이미 존재하는 닉네임입니다.");
         }
 //        user엔티티 객체 생성
@@ -59,13 +59,14 @@ public class UserAuthService {
 
     @Transactional(readOnly = true)
     public TokenDto.AccessRefreshToken tokens(UserLoginDto userLoginDto) {
+//        유저 아이디 검증 로직
         Users users = userRepository.findByUserId(userLoginDto.getUserId()).
                 orElseThrow(() -> new BadParameter("아이디 또는 비밀번호를 확인하세요"));
-//        이미 인코딩 된 String값을 비교할 때는 matches를 사용해야됨
+//        비밀번호 검증 로직
         if (!passwordEncoder.matches(userLoginDto.getPassword(), users.getPassword())) {
             throw new BadParameter("아이디 또는 비밀버호를 확인하세요");
         }
-        return tokenGenerator.generateAccessRefreshToken(users, "web");
+        return tokenGenerator.generateAccessRefreshToken(users, userLoginDto.getDeviceType());
     }
 
     @Transactional(readOnly = true)
@@ -76,7 +77,7 @@ public class UserAuthService {
         }
         Users user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFound("사용자를 찾을 수 없습니다."));
-        return tokenGenerator.generateAccessRefreshToken(user, "WEB");
+        return tokenGenerator.generateAccessRefreshToken(user, userRefreshDto.getDeviceType());
     }
 
     @Transactional
