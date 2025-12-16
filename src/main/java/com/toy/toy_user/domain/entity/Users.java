@@ -1,7 +1,6 @@
 package com.toy.toy_user.domain.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,7 @@ public class Users extends BaseTimeEntity {
     private Boolean isActivated;
 
     @Builder
-    public Users(String userId, String email, String password, String name, String nickName, String phoneNumber, Role role) {
+    private Users(String userId, String email, String password, String name, String nickName, String phoneNumber, Role role) {
         this.userId = userId;
         this.email = email;
         this.password = password;

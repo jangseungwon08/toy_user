@@ -7,6 +7,8 @@ import com.toy.toy_user.domain.dto.UserInfoDto;
 import com.toy.toy_user.domain.dto.UserPasswordDto;
 import com.toy.toy_user.domain.entity.Users;
 import com.toy.toy_user.domain.repository.UserRepository;
+import com.toy.toy_user.kafka.producer.KafkaMessageProducer;
+import com.toy.toy_user.kafka.producer.board.event.ChangeUserNickNameEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserInfoService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     @Transactional(readOnly = true)
     public UserInfoDto userInfo(String userId) {
@@ -49,11 +52,13 @@ public class UserInfoService {
 
         // DTO에서 넘어온 nickname이 null이 아니고 기존 닉네임과 다를때
         if (userEditDto.getNickName() != null && !users.getNickName().equals(userEditDto.getNickName())) {
-//            기존에 DB에 같은 이메일이 있는지 확인
+//            기존에 DB에 같은 닉네임이 있는지 확인
             if (userRepository.existsByNickName(userEditDto.getNickName())) {
                 throw new BadParameter("이미 존재하는 닉네임입니다.");
             }
             users.setNickName(userEditDto.getNickName());
+            ChangeUserNickNameEvent event = ChangeUserNickNameEvent.fromEntity(users);
+            kafkaMessageProducer.send(ChangeUserNickNameEvent.TOPIC,event);
         }
 
         // DTO에서 넘어온 phoneNumber가 null이 아니고 기존 phonenumber와 다를때
@@ -64,7 +69,7 @@ public class UserInfoService {
             }
             users.setPhoneNumber(userEditDto.getPhoneNumber());
         }
-//        닉네임 변경 메서드
+//       이름 변경 메서드
         if (userEditDto.getName() != null && !users.getName().equals(userEditDto.getName())) {
             users.setName(userEditDto.getName());
         }

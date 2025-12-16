@@ -6,12 +6,13 @@ import io.jsonwebtoken.security.Password;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-@Setter
+@Builder
 public class UserRegisterDto {
 
     @NotBlank(message = "아이디를 입력하세요")

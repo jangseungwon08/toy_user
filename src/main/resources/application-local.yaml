@@ -3,10 +3,10 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/toy_user
-    username: postgres
+    url: jdbc:mysql://localhost:13306/toy-user?serverTimezone=UTC&useSSL=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8
+    username: user
     password: 1234
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       minimum-idle: 4        # 최소 유휴 커넥션 수
       maximum-pool-size: 4   # 최대 커넥션 수
@@ -19,14 +19,23 @@ spring:
       port: ${REDIS_PORT}
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: create #update # 개발 환경용
+      ddl-auto: update # 개발 환경용
     generate-ddl: true
     show-sql: true
     open-in-view: false
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
 jwt:
-  web-access-token-validity-in-seconds: 900
+  web-access-token-validity-in-seconds: 1800
   web-refresh-token-validity-in-seconds: 604800
   mobile-access-token-validity-in-seconds: 900
   mobile-refresh-token-validity-in-seconds: 604800

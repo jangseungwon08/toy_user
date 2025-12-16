@@ -3,11 +3,12 @@ package com.toy.toy_user.domain.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
+@Builder
 public class UserPasswordDto {
     @NotBlank(message = "현재 비밀번호를 입력하세요")
     private String originPassword;

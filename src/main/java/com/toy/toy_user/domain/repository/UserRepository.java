@@ -16,7 +16,8 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByEmail(String email);
 
-    @Query(value = "SELECT is_activated FROM USERS where user_id = :user_id", nativeQuery = true)
+    @Query(value = "SELECT is_activated FROM users where user_id = :user_id",nativeQuery =true)
+
     boolean isActivated(@Param("user_id") String userId);
 
     Optional<Users> findByUserId(String userId);

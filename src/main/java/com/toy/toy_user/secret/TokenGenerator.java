@@ -50,7 +50,7 @@ public class TokenGenerator {
                 .claim("userId", user.getUserId())
                 .claim("deviceType", deviceType)
                 .claim("tokenType", tokenType)
-                .claim("nickname", user.getNickName())
+                .claim("nickName", user.getNickName())
                 .claim("role", user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiresIn * 1000L)).signWith(getSecretKey())
@@ -106,7 +106,7 @@ public class TokenGenerator {
     }
 
     private int tokenExpiresIn(boolean refreshToken, String deviceType) {
-        int expiresIn = 60 * 15;
+        int expiresIn = 60;
 //        리프레쉬 토큰이고 deviceType에 따라서
         if (refreshToken) {
             if (deviceType != null) {

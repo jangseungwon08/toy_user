@@ -14,9 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
 
@@ -46,13 +44,14 @@ public class UserAuthServiceTest {
     @DisplayName("회원가입을 할 수 있다.")
     public void registerUser() {
 //        given
-        UserRegisterDto dto = new UserRegisterDto();
-        dto.setUserId("userId");
-        dto.setEmail("email");
-        dto.setPassword("password");
-        dto.setName("Name");
-        dto.setNickName("NickName");
-        dto.setPhoneNumber("010-0000-0000");
+        UserRegisterDto dto = UserRegisterDto.builder()
+                .userId("userId")
+                .email("email")
+                .password("password")
+                .name("name")
+                .nickName("nickName")
+                .phoneNumber("010-0000-0000")
+                .build();
 //        when
         userAuthService.registerUser(dto);
 //        then
@@ -77,21 +76,23 @@ public class UserAuthServiceTest {
     @DisplayName("엑세스 토큰과 리프레쉬 토큰을 발급할 수 있다.")
     public void token() {
 //        given
-        UserRegisterDto dto = new UserRegisterDto();
-        dto.setUserId("userId");
-        dto.setEmail("email");
-        dto.setPassword("password");
-        dto.setName("Name");
-        dto.setNickName("NickName");
-        dto.setPhoneNumber("010-0000-0000");
+        UserRegisterDto dto = UserRegisterDto.builder()
+                .userId("userId")
+                .email("email")
+                .password("password")
+                .name("name")
+                .nickName("nickName")
+                .phoneNumber("010-0000-0000")
+                .build();
         userAuthService.validateId(dto.getUserId());
         userAuthService.validateNickName(dto.getNickName());
         userAuthService.registerUser(dto);
 //        when
-        UserLoginDto loginDto = new UserLoginDto();
-        loginDto.setUserId("userId");
-        loginDto.setPassword("password");
-        loginDto.setDeviceType("WEB");
+        UserLoginDto loginDto = UserLoginDto.builder()
+                .userId("userId")
+                .password("password")
+                .deviceType("WeB")
+                .build();
         TokenDto.AccessRefreshToken tokenDto = userAuthService.tokens(loginDto);
 
 //        then
@@ -100,6 +101,5 @@ public class UserAuthServiceTest {
                 tokenDto.getAccess().getExpiresIn()
         );
         System.out.println(tokenDto.getRefresh().getExpiresIn());
-
     }
 }

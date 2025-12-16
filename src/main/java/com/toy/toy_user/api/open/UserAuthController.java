@@ -47,7 +47,6 @@ public class UserAuthController {
 
     @PostMapping(value = "/tokens/renew")
     public ApiResponseDto<TokenDto.AccessRefreshToken> renewTokens(@RequestBody @Valid UserRefreshDto userRefreshDto) {
-
         TokenDto.AccessRefreshToken refreshToken = userAuthService.renewTokens(userRefreshDto);
         return ApiResponseDto.createOk(refreshToken);
     }
