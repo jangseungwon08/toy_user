@@ -3,7 +3,7 @@ spring:
     name: toy-user
   kafka:
 #    스프링이 카프카 클러스터에 부트스트랩하기 위한 IP주소와 포트
-    bootstrap-servers: localhost:9091, localhost:9092, localhost:9093
+    bootstrap-servers: localhost:9093
     listener:
       ack-mode: manual_immediate
     consumer:
